@@ -1,0 +1,212 @@
+{
+    "summary": {
+        "total_postings": 17880,
+        "real_count": 17014,
+        "fake_count": 866,
+        "fake_percentage": 4.8434004474272925
+    },
+    "metadata_impacts": {
+        "logo_impact": {
+            "with_logo_fake_rate": 0.01990154711673699,
+            "without_logo_fake_rate": 0.1592896174863388
+        },
+        "questions_impact": {
+            "with_questions_fake_rate": 0.02843494085532302,
+            "without_questions_fake_rate": 0.06778169014084508
+        },
+        "telecommuting_impact": {
+            "remote_fake_rate": 0.08344198174706649,
+            "onsite_fake_rate": 0.04686495646584468
+        }
+    },
+    "top_fake_industries": {
+        "Oil & Energy": 109,
+        "Accounting": 57,
+        "Hospital & Health Care": 51,
+        "Marketing and Advertising": 45,
+        "Financial Services": 35
+    },
+    "top_fake_functions": {
+        "Administrative": 119,
+        "Engineering": 113,
+        "Customer Service": 67,
+        "Sales": 41,
+        "Other": 32
+    },
+    "model_comparison": {
+        "Naive Bayes": {
+            "accuracy": 0.959731543624161,
+            "f1_fraud": 0.4375,
+            "f1_macro": 0.7083091647331787,
+            "roc_auc": 0.9292990374015447,
+            "confusion_matrix": [
+                [
+                    3376,
+                    27
+                ],
+                [
+                    117,
+                    56
+                ]
+            ],
+            "classification_report": {
+                "0": {
+                    "precision": 0.9665044374463212,
+                    "recall": 0.9920658242727005,
+                    "f1-score": 0.9791183294663574,
+                    "support": 3403.0
+                },
+                "1": {
+                    "precision": 0.6746987951807228,
+                    "recall": 0.3236994219653179,
+                    "f1-score": 0.4375,
+                    "support": 173.0
+                },
+                "accuracy": 0.959731543624161,
+                "macro avg": {
+                    "precision": 0.820601616313522,
+                    "recall": 0.6578826231190092,
+                    "f1-score": 0.7083091647331787,
+                    "support": 3576.0
+                },
+                "weighted avg": {
+                    "precision": 0.9523874418892886,
+                    "recall": 0.959731543624161,
+                    "f1-score": 0.952915876726514,
+                    "support": 3576.0
+                }
+            }
+        },
+        "Logistic Regression": {
+            "accuracy": 0.9614093959731543,
+            "f1_fraud": 0.6905829596412556,
+            "f1_macro": 0.8350021866503325,
+            "roc_auc": 0.9893667437266336,
+            "confusion_matrix": [
+                [
+                    3284,
+                    119
+                ],
+                [
+                    19,
+                    154
+                ]
+            ],
+            "classification_report": {
+                "0": {
+                    "precision": 0.9942476536481986,
+                    "recall": 0.9650308551278284,
+                    "f1-score": 0.9794214136594095,
+                    "support": 3403.0
+                },
+                "1": {
+                    "precision": 0.5641025641025641,
+                    "recall": 0.8901734104046243,
+                    "f1-score": 0.6905829596412556,
+                    "support": 173.0
+                },
+                "accuracy": 0.9614093959731543,
+                "macro avg": {
+                    "precision": 0.7791751088753813,
+                    "recall": 0.9276021327662263,
+                    "f1-score": 0.8350021866503325,
+                    "support": 3576.0
+                },
+                "weighted avg": {
+                    "precision": 0.9734380617881889,
+                    "recall": 0.9614093959731543,
+                    "f1-score": 0.965447964961104,
+                    "support": 3576.0
+                }
+            }
+        },
+        "Random Forest": {
+            "accuracy": 0.9790268456375839,
+            "f1_fraud": 0.7232472324723247,
+            "f1_macro": 0.8561738269613477,
+            "roc_auc": 0.9882770897490993,
+            "confusion_matrix": [
+                [
+                    3403,
+                    0
+                ],
+                [
+                    75,
+                    98
+                ]
+            ],
+            "classification_report": {
+                "0": {
+                    "precision": 0.9784358826912019,
+                    "recall": 1.0,
+                    "f1-score": 0.9891004214503706,
+                    "support": 3403.0
+                },
+                "1": {
+                    "precision": 1.0,
+                    "recall": 0.5664739884393064,
+                    "f1-score": 0.7232472324723247,
+                    "support": 173.0
+                },
+                "accuracy": 0.9790268456375839,
+                "macro avg": {
+                    "precision": 0.9892179413456009,
+                    "recall": 0.7832369942196532,
+                    "f1-score": 0.8561738269613477,
+                    "support": 3576.0
+                },
+                "weighted avg": {
+                    "precision": 0.9794791131985905,
+                    "recall": 0.9790268456375839,
+                    "f1-score": 0.9762389556524953,
+                    "support": 3576.0
+                }
+            }
+        }
+    },
+    "best_model_name": "Random Forest",
+    "top_suspicious_words": [
+        "link url",
+        "aptitude staffing",
+        "phone",
+        "signing bonus",
+        "money",
+        "high school",
+        "data entry",
+        "aptitude",
+        "link",
+        "earn",
+        "engineering",
+        "email",
+        "financing",
+        "process provide",
+        "administrative",
+        "assistant",
+        "cash",
+        "receptionist",
+        "administrative assistant",
+        "benefit"
+    ],
+    "top_genuine_words": [
+        "english",
+        "client",
+        "team",
+        "growing",
+        "search",
+        "digital",
+        "web",
+        "marketing",
+        "startup",
+        "fun",
+        "php",
+        "software",
+        "delivery",
+        "social",
+        "based",
+        "new",
+        "recruitment",
+        "know",
+        "game",
+        "become"
+    ]
+}

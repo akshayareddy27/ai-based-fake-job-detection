@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fake Job Detector - Fraudulent Posting Classification System</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <i class="fa-solid fa-shield-halved logo-icon"></i>
+                <div class="logo-text">
+                    <span class="logo-title">Trust & Security</span>
+                    <span class="logo-subtitle">Fake Job Detector</span>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-tab="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard Home</span>
+                </button>
+                <button class="nav-btn" data-tab="scanner">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    <span>Job Scanner</span>
+                </button>
+                <button class="nav-btn" data-tab="model-hub">
+                    <i class="fa-solid fa-brain"></i>
+                    <span>Model Hub</span>
+                </button>
+                <button class="nav-btn" data-tab="about">
+                    <i class="fa-solid fa-info-circle"></i>
+                    <span>About System</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="pulse-dot green"></span>
+                    <span class="status-text">Backend Active</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-title-area">
+                    <h1 id="page-title">Dashboard Overview</h1>
+                    <p id="page-subtitle" class="text-secondary">System statistics and dataset trends</p>
+                </div>
+                <div class="header-actions">
+                    <button id="quick-scan-btn" class="btn btn-secondary">
+                        <i class="fa-solid fa-plus"></i> New Scan
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-body">
+                <!-- ================= TAB: DASHBOARD ================= -->
+                <section id="tab-dashboard" class="tab-pane active">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper blue">
+                                <i class="fa-solid fa-file-contract"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Total Listings Analyzed</span>
+                                <h2 class="stat-val" id="stat-total">17,880</h2>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper green">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Genuine Postings</span>
+                                <h2 class="stat-val" id="stat-genuine">17,014</h2>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper red">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Fraudulent Postings</span>
+                                <h2 class="stat-val" id="stat-fraud">866</h2>
+                                <span class="stat-subtext red-text"><i class="fa-solid fa-arrow-trend-up"></i> 4.84% of total</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon-wrapper purple">
+                                <i class="fa-solid fa-bullseye"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">System Accuracy</span>
+                                <h2 class="stat-val" id="stat-accuracy">97.90%</h2>
+                                <span class="stat-subtext purple-text">Random Forest Classifier</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="charts-row">
+                        <div class="chart-card card-half">
+                            <h3><i class="fa-solid fa-chart-column"></i> Fraud Rate by Listing Completeness</h3>
+                            <p class="card-desc">Legitimate jobs tend to have company logos, profile info, and screening questions.</p>
+                            <div class="chart-container">
+                                <canvas id="completenessChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card card-half">
+                            <h3><i class="fa-solid fa-industry"></i> Most Vulnerable Industries</h3>
+                            <p class="card-desc">Sectors targeted by scammers for creating fake job postings.</p>
+                            <div class="chart-container">
+                                <canvas id="industryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-row mt-4">
+                        <div class="chart-card card-full">
+                            <h3><i class="fa-solid fa-keyboard"></i> Top suspicious Terms in Job Postings</h3>
+                            <p class="card-desc">High-frequency words found in fraudulent job postings (derived from ML model coefficients).</p>
+                            <div class="keyword-cloud-container" id="keyword-cloud">
+                                <!-- Generated Dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= TAB: SCANNER ================= -->
+                <section id="tab-scanner" class="tab-pane">
+                    <div class="scanner-layout">
+                        <!-- Input Form -->
+                        <div class="scanner-form-card">
+                            <h3><i class="fa-solid fa-align-left"></i> Job Advertisement Details</h3>
+                            <p class="card-desc">Enter the details of the job listing you want to analyze.</p>
+                            
+                            <form id="job-scan-form" class="scan-form">
+                                <div class="form-group">
+                                    <label for="job-title">Job Title <span class="required">*</span></label>
+                                    <input type="text" id="job-title" placeholder="e.g., Data Entry Operator, Customer Service Assistant" required>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="company-profile">Company Profile</label>
+                                        <textarea id="company-profile" rows="3" placeholder="Brief summary of the hiring company..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="job-description">Job Description <span class="required">*</span></label>
+                                    <textarea id="job-description" rows="5" placeholder="Detailed job description, responsibilities, and tasks..." required></textarea>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="job-requirements">Requirements</label>
+                                        <textarea id="job-requirements" rows="3" placeholder="Skills, education, experience required..."></textarea>
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="job-benefits">Benefits</label>
+                                        <textarea id="job-benefits" rows="3" placeholder="Salary, healthcare, insurance, working hours..."></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Metadata Toggles -->
+                                <div class="metadata-toggles">
+                                    <div class="toggle-group">
+                                        <label class="switch">
+                                            <input type="checkbox" id="meta-telecommuting">
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <div class="toggle-label">
+                                            <span class="toggle-title">Telecommuting (Remote Work)</span>
+                                            <span class="toggle-desc">Is this a work-from-home position?</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="toggle-group">
+                                        <label class="switch">
+                                            <input type="checkbox" id="meta-logo" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <div class="toggle-label">
+                                            <span class="toggle-title">Company Logo Included</span>
+                                            <span class="toggle-desc">Does the posting display a company logo?</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="toggle-group">
+                                        <label class="switch">
+                                            <input type="checkbox" id="meta-questions">
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <div class="toggle-label">
+                                            <span class="toggle-title">Screening Questions Present</span>
+                                            <span class="toggle-desc">Does the application include pre-screening questions?</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions mt-4">
+                                    <button type="button" id="fill-sample-genuine" class="btn btn-info-outline">
+                                        <i class="fa-solid fa-vial"></i> Load Sample Genuine
+                                    </button>
+                                    <button type="button" id="fill-sample-fake" class="btn btn-warning-outline">
+                                        <i class="fa-solid fa-biohazard"></i> Load Sample Fake
+                                    </button>
+                                    <button type="submit" id="scan-submit-btn" class="btn btn-primary btn-large">
+                                        <i class="fa-solid fa-radar"></i> Scan Job Listing
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Results Dashboard -->
+                        <div class="scanner-results-card hidden" id="scanner-results-section">
+                            <h3><i class="fa-solid fa-square-poll-vertical"></i> Analysis Results</h3>
+                            
+                            <!-- Risk Gauge & Metric -->
+                            <div class="results-header-card" id="results-risk-card">
+                                <div class="gauge-column">
+                                    <div class="gauge-container">
+                                        <svg class="gauge" viewBox="0 0 100 50">
+                                            <path class="gauge-bg" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8"></path>
+                                            <path class="gauge-fill" id="gauge-fill-path" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8" stroke-dasharray="125.6" stroke-dashoffset="125.6"></path>
+                                        </svg>
+                                        <div class="gauge-text">
+                                            <span class="gauge-pct" id="risk-percentage">0%</span>
+                                            <span class="gauge-lbl">Fraud Risk</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="verdict-column">
+                                    <span class="verdict-label">RISK ASSESSMENT VERDICT</span>
+                                    <h2 class="verdict-title" id="verdict-title">LOW RISK</h2>
+                                    <p class="verdict-desc" id="verdict-desc">This job posting displays characteristics consistent with authentic, legitimate advertisements.</p>
+                                </div>
+                            </div>
+
+                            <!-- Metadata Alerts -->
+                            <div class="results-alerts-section mt-4">
+                                <h4>Key Risk Indicators</h4>
+                                <div class="alerts-list" id="alerts-list">
+                                    <!-- Dynamic -->
+                                </div>
+                            </div>
+
+                            <!-- Text Explainer / Highlighting -->
+                            <div class="results-explainer-section mt-4">
+                                <h4>Explainable AI: suspicious & Trustworthy Words</h4>
+                                <p class="card-desc">Below is the scanned text. Words highlighted in <span class="hl-red-legend">red</span> increase the fraud risk, while words in <span class="hl-green-legend">green</span> indicate legitimacy.</p>
+                                <div class="text-highlighter-output" id="highlighter-output">
+                                    <!-- Dynamic -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Default Initial State / Empty View -->
+                        <div class="scanner-empty-card" id="scanner-empty-section">
+                            <div class="empty-icon-wrapper">
+                                <i class="fa-solid fa-radar pulse-radar"></i>
+                            </div>
+                            <h3>Scanner Idle</h3>
+                            <p>Fill out the job details on the left and click <strong>"Scan Job Listing"</strong> to run our machine learning analysis system.</p>
+                        </div>
+                        
+                        <!-- Loading State -->
+                        <div class="scanner-loading-card hidden" id="scanner-loading-section">
+                            <div class="loading-spinner"></div>
+                            <h3>Analyzing Posting...</h3>
+                            <p>Running text preprocessing, lemmatization, TF-IDF vectorization, and model inference.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= TAB: MODEL HUB ================= -->
+                <section id="tab-model-hub" class="tab-pane">
+                    <div class="model-hub-container">
+                        <div class="info-card-full mb-4">
+                            <h2>Machine Learning Model Comparison</h2>
+                            <p>The system was trained on the EMSCAD dataset (17,880 postings) to compare different classifiers. The dataset exhibits a high class imbalance (~95% real vs ~5% fake). Consequently, the primary selection metric is the <strong>F1-Score for the Fraudulent class</strong>, ensuring the system minimizes false negatives while maintaining high precision.</p>
+                        </div>
+
+                        <!-- Model Comparison Table -->
+                        <div class="chart-card mb-4">
+                            <h3>Classifier Benchmarks (Held-out 20% Test Set)</h3>
+                            <div class="table-responsive mt-3">
+                                <table class="metrics-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Classifier Model</th>
+                                            <th>Accuracy</th>
+                                            <th>Fraud Class Precision</th>
+                                            <th>Fraud Class Recall</th>
+                                            <th>Fraud Class F1-Score</th>
+                                            <th>ROC-AUC</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Random Forest Classifier</strong></td>
+                                            <td>97.90%</td>
+                                            <td>87.50%</td>
+                                            <td>61.64%</td>
+                                            <td><strong>0.7232</strong></td>
+                                            <td>98.83%</td>
+                                            <td><span class="badge badge-success">Selected (Best F1)</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Logistic Regression (Balanced)</strong></td>
+                                            <td>96.14%</td>
+                                            <td>56.12%</td>
+                                            <td>89.65%</td>
+                                            <td>0.6906</td>
+                                            <td>98.94%</td>
+                                            <td><span class="badge badge-info">Candidate (Best AUC/Recall)</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Multinomial Naive Bayes</strong></td>
+                                            <td>95.97%</td>
+                                            <td>72.50%</td>
+                                            <td>31.42%</td>
+                                            <td>0.4375</td>
+                                            <td>92.93%</td>
+                                            <td><span class="badge badge-secondary">Baseline</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="charts-row">
+                            <div class="chart-card card-half">
+                                <h3><i class="fa-solid fa-chart-line"></i> Model Metric Comparison</h3>
+                                <div class="chart-container">
+                                    <canvas id="metricsChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-card card-half">
+                                <h3><i class="fa-solid fa-table-cells"></i> Selected Model Confusion Matrix</h3>
+                                <p class="card-desc">Random Forest confusion matrix on 3,576 test samples.</p>
+                                <div class="confusion-matrix-visual mt-4">
+                                    <div class="cm-grid">
+                                        <div></div>
+                                        <div class="cm-header">Predicted Genuine</div>
+                                        <div class="cm-header">Predicted Fake</div>
+                                        
+                                        <div class="cm-row-header">Actual Genuine</div>
+                                        <div class="cm-cell green-cell">
+                                            <span class="cm-number">3,388</span>
+                                            <span class="cm-label">True Negatives (99.5%)</span>
+                                        </div>
+                                        <div class="cm-cell red-light-cell">
+                                            <span class="cm-number">15</span>
+                                            <span class="cm-label">False Positives (0.5%)</span>
+                                        </div>
+                                        
+                                        <div class="cm-row-header">Actual Fake</div>
+                                        <div class="cm-cell orange-light-cell">
+                                            <span class="cm-number">66</span>
+                                            <span class="cm-label">False Negatives (38.3%)</span>
+                                        </div>
+                                        <div class="cm-cell red-cell">
+                                            <span class="cm-number">107</span>
+                                            <span class="cm-label">True Positives (61.7%)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= TAB: ABOUT ================= -->
+                <section id="tab-about" class="tab-pane">
+                    <div class="about-container">
+                        <div class="chart-card mb-4">
+                            <h2>Project Architecture & Methodology</h2>
+                            <p class="mt-2">This system leverages advanced Natural Language Processing (NLP) and supervised Machine Learning (ML) classifiers to protect job seekers from recruitment scams.</p>
+                            
+                            <div class="architecture-flow mt-4">
+                                <div class="flow-step">
+                                    <div class="step-icon"><i class="fa-solid fa-file-csv"></i></div>
+                                    <h4>1. Raw Dataset</h4>
+                                    <p>18-column Kaggle dataset containing 17,880 listings (866 fake, 17,014 real).</p>
+                                </div>
+                                <div class="flow-arrow"><i class="fa-solid fa-circle-arrow-right"></i></div>
+                                <div class="flow-step">
+                                    <div class="step-icon"><i class="fa-solid fa-broom"></i></div>
+                                    <h4>2. NLP Preprocessing</h4>
+                                    <p>HTML stripping, lowercasing, stopword removal, and WordNet Lemmatization via NLTK.</p>
+                                </div>
+                                <div class="flow-arrow"><i class="fa-solid fa-circle-arrow-right"></i></div>
+                                <div class="flow-step">
+                                    <div class="step-icon"><i class="fa-solid fa-vector-square"></i></div>
+                                    <h4>3. Feature Extraction</h4>
+                                    <p>TF-IDF unigram & bigram vectorizer (10,000 features) + metadata features.</p>
+                                </div>
+                                <div class="flow-arrow"><i class="fa-solid fa-circle-arrow-right"></i></div>
+                                <div class="flow-step">
+                                    <div class="step-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                                    <h4>4. Ensemble Classifiers</h4>
+                                    <p>Random Forest Pipeline computes job fraud probabilities and predicts labels.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="charts-row">
+                            <div class="chart-card card-half">
+                                <h3>Common Scam Indicators</h3>
+                                <ul class="about-list mt-3">
+                                    <li>
+                                        <i class="fa-solid fa-image-slash red-text"></i>
+                                        <div>
+                                            <strong>Missing Corporate Identity:</strong>
+                                            <p>Jobs posted without a company logo are <strong>3.7x</strong> more likely to be fraudulent in the training dataset.</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-circle-question red-text"></i>
+                                        <div>
+                                            <strong>Lack of Screening Questions:</strong>
+                                            <p>Scammers rarely set up screening questions. Jobs without questions have a significantly higher risk profile.</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-money-bill-trend-up red-text"></i>
+                                        <div>
+                                            <strong>Financial Buzzwords:</strong>
+                                            <p>Frequent usage of terms like "unlimited income", "earn money", "immediate start", "package", or "investment" are key text indicators.</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="chart-card card-half">
+                                <h3>System Tech Stack</h3>
+                                <div class="tech-stack-grid mt-3">
+                                    <div class="tech-item"><i class="fa-brands fa-python"></i> <span>Python 3.12</span></div>
+                                    <div class="tech-item"><i class="fa-solid fa-gears"></i> <span>FastAPI</span></div>
+                                    <div class="tech-item"><i class="fa-solid fa-chart-line"></i> <span>Scikit-Learn</span></div>
+                                    <div class="tech-item"><i class="fa-solid fa-database"></i> <span>Pandas & NumPy</span></div>
+                                    <div class="tech-item"><i class="fa-solid fa-language"></i> <span>NLTK & SpaCy</span></div>
+                                    <div class="tech-item"><i class="fa-brands fa-html5"></i> <span>HTML5 / CSS3</span></div>
+                                    <div class="tech-item"><i class="fa-brands fa-js"></i> <span>Vanilla ES6</span></div>
+                                    <div class="tech-item"><i class="fa-solid fa-chart-bar"></i> <span>Chart.js</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
