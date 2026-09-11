@@ -108,3 +108,7 @@ This project is intended for educational and demonstration purposes. Predictions
 ## Project Status
 
 This repository contains the current project implementation, including the machine learning pipeline, trained model artifacts, FastAPI backend, and web dashboard.
+
+## Dashboard Preview
+
+![AI-Based Fake Job Detection Dashboard](./Screenshot%202026-09-10%20200938.png)
