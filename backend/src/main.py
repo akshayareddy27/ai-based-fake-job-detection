@@ -165,6 +165,8 @@ async def predict_job(job: JobPostingInput):
         }
         
     except Exception as e:
+
+        print(f"Prediction error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
 
 @app.get("/api/stats")
