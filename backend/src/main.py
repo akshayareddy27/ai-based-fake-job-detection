@@ -15,6 +15,10 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
+
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 STATIC_DIR = os.path.join(PROJECT_ROOT, "frontend")
 SRC_DIR = os.path.dirname(os.path.abspath(__file__))
